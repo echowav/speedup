@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         speedup
 // @namespace    https://github.com/echowav
-// @version      0.0.2
+// @version      0.0.3
 // @description  快速视频播放脚本，支持长按空格键加速视频播放
 // @description:en Speed up video playback with long press on space
 // @author       echowav
