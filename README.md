@@ -23,7 +23,7 @@ SpeedUp 是一款轻量级的用户脚本（Userscript），让你在浏览网�
    - 或 [Violentmonkey](https://violentmonkey.github.io/)
 
 2. 安装 SpeedUp 脚本：
-   - 👉 [点击此处安装脚本](https://greasyfork.org/zh-CN/scripts/545989-speedup)（右键链接 → “另存为” 或直接点击）
+   - 👉 [点击此处安装脚本](https://greasyfork.org/zh-CN/scripts/545989-speedup)（Greasy Fork）
 
 3. 安装后自动生效，无需配置。
 
@@ -43,7 +43,7 @@ SpeedUp 是一款轻量级的用户脚本（Userscript），让你在浏览网�
 
 ## ⚙️ 自定义设置（可选）
 
-> [WIP] 未来版本将支持配置面板。
+> [WIP] 未来版本将支持配置倍速。
 
 ---
 
