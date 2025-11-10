@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         speedup
+// @name         SpeedUp – 长按空格倍速播放视频
 // @namespace    https://github.com/echowav
-// @version      0.0.3
+// @version      0.0.4
 // @description  快速视频播放脚本，支持长按空格键加速视频播放
 // @description:en Speed up video playback with long press on space
 // @author       echowav
@@ -12,6 +12,37 @@
 // ==/UserScript==
 
 (function () {
+let policy;
+
+/**
+ * Returns the Trusted Types policy, or null if Trusted Types are not
+ * enabled/supported. The first call to this function will create the policy.
+ */
+function getPolicy() {
+  if (policy === undefined) {
+    const trustedTypes = window.trustedTypes;
+    policy = null;
+
+    if (trustedTypes) {
+      try {
+        policy = trustedTypes.createPolicy('escape', {
+          createHTML: s => s,
+        });
+      } catch {
+        // trustedTypes.createPolicy throws if called with a name that is
+        // already registered, even in report-only mode. Until the API changes,
+        // catch the error not to break the applications functionally. In such
+        // cases, the code will fall back to using strings.
+      }
+    }
+  }
+  return policy;
+}
+
+function trustedHTMLFromString(html) {
+  return getPolicy()?.createHTML(html) || html;
+}
+
 function useLongPress(target, {
   onStart = () => {},
   onHold = null,
@@ -163,13 +194,13 @@ function createSpeedIndicator() {
   if (speedIndicator) return;
 
   speedIndicator = document.createElement('div');
-  speedIndicator.innerHTML = `
+  speedIndicator.innerHTML = trustedHTMLFromString(`
     <span>2x</span>
-    <div class="triangle-container">
-      <div class="triangle"></div>
-      <div class="triangle" style="margin-left: 2px;"></div>
+    <div id="triangle-container">
+      <div id="triangle1"></div>
+      <div id="triangle2" style="margin-left: 2px;"></div>
     </div>
-  `;
+  `);
 
   speedIndicator.style.cssText = `
     position: fixed;
@@ -205,25 +236,26 @@ function createSpeedIndicator() {
       50% { opacity: 0.9; }
       100% { opacity: 0.4; }
     }
-    .triangle-container {
+    #triangle-container {
       display: flex;
     }
-    .triangle {
+    #triangle1, #triangle2 {
       width: 0;
       height: 0;
       border-left: 8px solid #fff;
       border-top: 5px solid transparent;
       border-bottom: 5px solid transparent;
     }
-    .triangle:nth-child(1) {
+    #triangle1 {
       animation: fadeInOut 1s ease-in-out infinite;
       animation-delay: -0.25s;
     }
-    .triangle:nth-child(2) {
+    #triangle2 {
       animation: fadeInOut 1s ease-in-out infinite;
     }
   `;
-  document.head.appendChild(style);
+
+  speedIndicator.prepend(style);
 }
 
 function showSpeedIndicator() {
